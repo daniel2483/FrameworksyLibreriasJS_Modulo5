@@ -1,14 +1,15 @@
 $(document).ready(function(){
   /////////////// Global Variables  ////////////////////
-  console.log("Testing")
+  //console.log("Testing")
   originalColorTitle = $(".main-titulo").css("color");
   changingColorTitle = "white";
-  console.log("Color Orginal: " + originalColorTitle)
+  //console.log("Color Orginal: " + originalColorTitle)
   var toChange = 0;
+  var countMov = 0;
 
   /////////////// Main ////////////////////
 
-  //setInterval(title_effect, 1200);
+  setInterval(title_effect, 1200);
 
   loadCandiesInitial();
 
@@ -21,8 +22,8 @@ $(document).ready(function(){
   // 1. Function for Title Effect
   function title_effect (){
     titleStyle = $(".main-titulo");
-    console.log("Changing Style!");
-    console.log(toChange);
+    //console.log("Changing Style!");
+    //console.log(toChange);
     //setInterval(
     //  setTimeout(function(){
     //  if (toChange == 0){
@@ -39,7 +40,7 @@ $(document).ready(function(){
     //},200),500)
 
     currentColor = $(".main-titulo").css("color");
-    console.log(currentColor);
+    //console.log(currentColor);
 
     if (currentColor == "rgb(255, 255, 255)"){
       $( ".main-titulo" ).animate({
@@ -76,10 +77,11 @@ $(document).ready(function(){
 
   // Function to get which div column and which child row
   function selectCandy (){
+    $(".moves > span").text(countMov);
     for (i = 1; i <= 7; i++){
       object = ".col-"+i+" img:nth-child(1)";
       //console.log(i);
-      $(object).on('mouseenter', function (e) {
+      $(object).on('mouseenter mouseup', function (e) {
         classColumn = $("#" + this.id).parent().prop('className')
         candyObject = "." + classColumn + " img:nth-child(1)";
         childIndex = $(this).index() + 1;
@@ -90,7 +92,7 @@ $(document).ready(function(){
     for (i = 1; i <= 7; i++){
       object = ".col-"+i+" img:nth-child(2)";
       //console.log(i);
-      $(object).on('mouseenter', function (e) {
+      $(object).on('mouseenter mouseup', function (e) {
         classColumn = $("#" + this.id).parent().prop('className')
         childIndex = $(this).index() + 1;
         //console.log("Column: " + classColumn + "  Child: " + childIndex);
@@ -100,7 +102,7 @@ $(document).ready(function(){
     for (i = 1; i <= 7; i++){
       object = ".col-"+i+" img:nth-child(3)";
       //console.log(i);
-      $(object).on('mouseenter', function (e) {
+      $(object).on('mouseenter mouseup', function (e) {
         classColumn = $("#" + this.id).parent().prop('className')
         childIndex = $(this).index() + 1;
         //console.log("Column: " + classColumn + "  Child: " + childIndex);
@@ -110,7 +112,7 @@ $(document).ready(function(){
     for (i = 1; i <= 7; i++){
       object = ".col-"+i+" img:nth-child(4)";
       //console.log(i);
-      $(object).on('mouseenter', function (e) {
+      $(object).on('mouseenter mouseup', function (e) {
         classColumn = $("#" + this.id).parent().prop('className')
         childIndex = $(this).index() + 1;
         //console.log("Column: " + classColumn + "  Child: " + childIndex);
@@ -120,7 +122,7 @@ $(document).ready(function(){
     for (i = 1; i <= 7; i++){
       object = ".col-"+i+" img:nth-child(5)";
       //console.log(i);
-      $(object).on('mouseenter', function (e) {
+      $(object).on('mouseenter mouseup', function (e) {
         classColumn = $("#" + this.id).parent().prop('className')
         childIndex = $(this).index() + 1;
         //console.log("Column: " + classColumn + "  Child: " + childIndex);
@@ -130,7 +132,7 @@ $(document).ready(function(){
     for (i = 1; i <= 7; i++){
       object = ".col-"+i+" img:nth-child(6)";
       //console.log(i);
-      $(object).on('mouseenter', function (e) {
+      $(object).on('mouseenter mouseup', function (e) {
         classColumn = $("#" + this.id).parent().prop('className')
         childIndex = $(this).index() + 1;
         //console.log("Column: " + classColumn + "  Child: " + childIndex);
@@ -140,7 +142,7 @@ $(document).ready(function(){
     for (i = 1; i <= 7; i++){
       object = ".col-"+i+" img:nth-child(7)";
       //console.log(i);
-      $(object).on('mouseenter', function (e) {
+      $(object).on('mouseenter mouseup', function (e) {
         classColumn = $("#" + this.id).parent().prop('className')
         childIndex = $(this).index() + 1;
         //console.log("Column: " + classColumn + "  Child: " + childIndex);
@@ -162,8 +164,9 @@ $(document).ready(function(){
     //console.log("Up: " + upPosition + "  Down: " + downPosition + "  Left: " + leftPosition + "  Right: " + RightPosition)
     row = childIndex;
     column = classColumn[4];
-    console.log("Current Row: " + row + " | Current Column: " + column);
+    //console.log("Current Row: " + row + " | Current Column: " + column);
 
+    // Just One element Draggable at the same time
     $(dragObject).draggable({
         revert: true,
         zIndex: 10,
@@ -173,83 +176,92 @@ $(document).ready(function(){
         }
     });
 
-    // Down movement
+    // $(dragObject).draggable( 'enable' )
+
+    // Down movement - Working
     if (row < 7){
-      console.log("Can go down..")
-      droppableDown = 
-      $( ".col-1 img:nth-child(2)" ).droppable({
+      //console.log("Can go down..")
+      droppableDownObject = "." + classColumn + " img:nth-child(" + (downPosition) + ")"
+      $( droppableDownObject ).droppable({
         drop: function (event, ui) {
             var dropped = ui.draggable;
             var droppedOn = this;
 
             dropped.draggable({revert: false});
+            image_dest = $( droppableDownObject );
+            $( dragObject ).insertAfter( image_dest );
+            $( droppableDownObject ).css("top","0px");
+            $( droppableDownObject ).css("left","0px");
 
-            //image_dest = $( ".col-1 img:nth-child(2)" );
-            //$( ".col-1 img:nth-child(2)" ).remove();
-            //$( ".col-1" ).prepend(image_dest);
-            //$( ".col-1 img:nth-child(2)" ).css("top","0px");
-            //$( ".col-1 img:nth-child(2)" ).css("left","0px");
+            countMov += 1;
+            //console.log(countMov)
 
-            //selectCandy();
+            selectCandy();
         }
       });
     }
 
     // Up movement
     if (row > 1){
-      console.log("Can go up..")
-      $( ".col-2 img:nth-child(1)" ).droppable({
+      //console.log("Can go up..")
+      droppableUpObject = "." + classColumn + " img:nth-child(" + (upPosition) + ")"
+      //console.log(droppableDownObject2);
+      $( droppableUpObject ).droppable({
         drop: function (event, ui) {
             var dropped = ui.draggable;
             var droppedOn = this;
 
             dropped.draggable({revert: false});
+            image_dest = $( droppableUpObject );
+            $( dragObject ).insertBefore( image_dest );
+            $( droppableUpObject ).css("top","0px");
+            $( droppableUpObject ).css("left","0px");
 
-            //image_dest = $( ".col-2 img:nth-child(1)" )
-            //image_orig = $( ".col-1 img:nth-child(1)" )
-            //$( ".col-2 img:nth-child(1)" ).remove()
-            //$( ".col-2" ).prepend(image_orig)
-            //$( ".col-1" ).prepend(image_dest)
-            //$( ".col-2 img:nth-child(1)" ).css("top","0px")
-            //$( ".col-2 img:nth-child(1)" ).css("left","0px")
+            countMov += 1;
+            //console.log(countMov)
 
-            //selectCandy();
-        }
-      });
-    }
-
-    // Left movement
-    if (column < 7){
-      console.log("Can go right..")
-      $( ".col-2 img:nth-child(1)" ).droppable({
-        drop: function (event, ui) {
-            var dropped = ui.draggable;
-            var droppedOn = this;
-
-            dropped.draggable({revert: false});
-
-            //image_dest = $( ".col-2 img:nth-child(1)" )
-            //image_orig = $( ".col-1 img:nth-child(1)" )
-            //$( ".col-2 img:nth-child(1)" ).remove()
-            //$( ".col-2" ).prepend(image_orig)
-            //$( ".col-1" ).prepend(image_dest)
-            //$( ".col-2 img:nth-child(1)" ).css("top","0px")
-            //$( ".col-2 img:nth-child(1)" ).css("left","0px")
-
-            //selectCandy();
+           selectCandy();
         }
       });
     }
 
     // Right movement
-    if (column > 1){
-      console.log("Can go left..")
-      $( ".col-2 img:nth-child(1)" ).droppable({
-        drop: function (event, ui) {
-            var dropped = ui.draggable;
-            var droppedOn = this;
+    if (column < 7){
+      //console.log("Can go right..")
+      droppableRightObject = ".col-" + (leftPosition + 2) + " img:nth-child(" + childIndex + ")"
+      console.log(droppableRightObject);
+      //$( droppableLeftObject ).droppable({
+      //  drop: function (event, ui) {
+      //      var dropped = ui.draggable;
+      //      var droppedOn = this;
 
-            dropped.draggable({revert: false});
+            //dropped.draggable({revert: false});
+            //image_dest = $( droppableUpObject );
+            //if (row == 1){
+            //  $( droppableLeftObject ).insertBefore( image_dest );
+            //}
+            //else{
+            //  $( droppableLeftObject ).insertAfter( image_dest );
+            //}
+
+            //$( droppableLeftObject ).css("top","0px");
+            //$( droppableLeftObject ).css("left","0px");
+
+      //     selectCandy();
+      //  }
+      //});
+    }
+
+    // Left movement
+    if (column > 1){
+    //  droppableDownObject = "." + classColumn + " img:nth-child(" + (downPosition) + ")"
+      //console.log("Can go left..")
+    //  $( ".col-2 img:nth-child(1)" ).droppable({
+    //    drop: function (event, ui) {
+    //        var dropped = ui.draggable;
+    //        var droppedOn = this;
+
+    //        dropped.draggable({revert: false});
 
             //image_dest = $( ".col-2 img:nth-child(1)" )
             //image_orig = $( ".col-1 img:nth-child(1)" )
@@ -260,11 +272,12 @@ $(document).ready(function(){
             //$( ".col-2 img:nth-child(1)" ).css("left","0px")
 
             //selectCandy();
-        }
-      });
+    //    }
+    //  });
     }
 
-
+    //$( dragObject ).draggable( "destroy" );
+    //selectCandy();
   }
 
 });
