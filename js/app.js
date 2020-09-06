@@ -10,7 +10,16 @@ $(document).ready(function(){
 
   // Array that contains Objects with a match to then give an effect
   var valueMatchArray = [];
+  var uniqueObj = [];
 
+  // Counter for Mathing Deleted
+  var machingDeletedCounter = 0;
+
+  // Counter if There is match candies
+  var counterMaxPoints = 1;
+
+  // Extra counter to run loop and check if there is new matches after first match
+  var repFlag = 0
 
   // Timer Variable
   var x;
@@ -24,7 +33,8 @@ $(document).ready(function(){
   // To load initial Candies
   loadCandiesInitial();
 
-  deleteMatchCandies();
+  selectCandy();
+
 
   //candyEffect(".col-1 > img:nth-child(1)");
 
@@ -33,6 +43,7 @@ $(document).ready(function(){
     if ($( '.btn-reinicio' ).html() == "Iniciar" ) {
       // To start the select candy function
       selectCandy();
+      deleteMatchCandies();
       $( '.btn-reinicio' ).html("Reiniciar")
       var now = new Date().getTime();
       timer(now);
@@ -41,6 +52,9 @@ $(document).ready(function(){
       deletingAllCandies();
       loadCandiesInitial();
       selectCandy();
+      deleteMatchCandies();
+
+
       clearInterval(x);
       countMov = 0;
       points = 0;
@@ -112,7 +126,7 @@ $(document).ready(function(){
         randomCandy = Math.floor((Math.random() * 4) + 1);
         candy = randomCandy + ".png"
         //console.log(candy);
-        $(".col-"+j).append('<img id="'+ j + i + '" src="image/' + candy + '" height="90px" />')
+        $(".col-" + j).append('<img id="'+ j + i + '" src="image/' + candy + '" height="90px" />')
 
       }
     }
@@ -240,7 +254,10 @@ $(document).ready(function(){
             countMov += 1;
 
             deletingTopLeft();
-            selectCandy();
+            valueMatchArray = [];
+            uniqueObj = [];
+            repFlag = 0;
+            deleteMatchCandies();
         }
       });
     }
@@ -263,7 +280,10 @@ $(document).ready(function(){
             countMov += 1;
 
             deletingTopLeft();
-            selectCandy();
+            valueMatchArray = [];
+            uniqueObj = [];
+            repFlag = 0;
+            deleteMatchCandies();
         }
       });
     }
@@ -295,7 +315,10 @@ $(document).ready(function(){
             countMov += 1;
 
             deletingTopLeft();
-            selectCandy();
+            valueMatchArray = [];
+            uniqueObj = [];
+            repFlag = 0;
+            deleteMatchCandies();
         }
       });
     }
@@ -327,7 +350,10 @@ $(document).ready(function(){
             countMov += 1;
 
             deletingTopLeft();
-            selectCandy();
+            valueMatchArray = [];
+            uniqueObj = [];
+            repFlag = 0;
+            deleteMatchCandies();
         }
       });
     }
@@ -410,6 +436,7 @@ $(document).ready(function(){
 
   function candyEffect(candyObj){
 
+    // Make the Candy Effect
     $(candyObj).fadeOut(timeInterval).fadeIn(timeInterval).fadeOut(timeInterval).fadeIn(timeInterval).fadeOut(timeInterval).fadeIn(timeInterval);
 
 
@@ -417,6 +444,8 @@ $(document).ready(function(){
 
   }
 
+  // Function that Add new points if a Matching algorythm is found.
+  // This function adds new matching objects into array
   function pointsAlg(candyObj){
         candyObjImageOrig = candyObj;
         candyObj = $(candyObj);
@@ -475,6 +504,8 @@ $(document).ready(function(){
           valueMatchArray.push(candyOjbImageAbove2);
           points += 50;
           counterMaxPoints +=1;
+          repFlag = 1;
+          //console.log(extraCounter);
           //candyEffect();
         }
         if (candyObjImage == candyOjbClassBelow1 && candyObjImage == candyOjbClassBelow2) {
@@ -484,6 +515,8 @@ $(document).ready(function(){
           valueMatchArray.push(candyOjbImageBelow2);
           points += 50;
           counterMaxPoints +=1;
+          repFlag = 1;
+          //console.log(extraCounter);
           //candyEffect();
         }
         if (candyObjImage == candyOjbClassLeft1 && candyObjImage == candyOjbClassLeft2) {
@@ -493,6 +526,8 @@ $(document).ready(function(){
           valueMatchArray.push(candyOjbImageLeft2);
           points += 50;
           counterMaxPoints +=1;
+          repFlag = 1;
+          //console.log(extraCounter);
           //candyEffect();
         }
         if (candyObjImage == candyOjbClassRight1 && candyObjImage == candyOjbClassRight2) {
@@ -502,6 +537,8 @@ $(document).ready(function(){
           valueMatchArray.push(candyOjbImageRight2);
           points += 50;
           counterMaxPoints +=1;
+          repFlag = 1;
+          //console.log(extraCounter);
           //candyEffect();
         }
 
@@ -509,15 +546,21 @@ $(document).ready(function(){
           points += counterMaxPoints * 50;
         }
 
+        //console.log(repFlag);
+
   }
 
-
+  // Function that Adds new points and remove Candies with effect
   function deleteMatchCandies (){
       // Example of candyObj Input
       // candyObj = $('.col-1 img:nth-child(1)');
 
+      valueMatchArray = [];
+      uniqueObj = [];
 
-      // J represent column and i represents row
+      // Run while once
+      repFlag = 1;
+
       for (j = 1; j <= 7; j++) {
           //console.log("Column: " + j);
           for (i = 1; i <= 7; i++) {
@@ -526,37 +569,142 @@ $(document).ready(function(){
             pointsAlg(".col-" + j + " img:nth-child(" + i + ")")
           }
         }
+        //console.log(extraCounter);
 
-      //pointsAlg(candyObj);
       // Delete Repeat CandyObjects
-      var uniqueObj = [];
+      uniqueObj = [];
       $.each(valueMatchArray, function(i, el){
           if($.inArray(el, uniqueObj) === -1) uniqueObj.push(el);
       });
+
+      // Empty array
+      valueMatchArray = [];
 
       //console.log(uniqueObj);
       //console.log("Puntos Totales: " + points);
 
       //uniqueObj.length()
 
+      //disableDrag();
       $.each( uniqueObj, function( index, value ) {
-        console.log( index + ": " + value );
+        //console.log( index + ": " + value );
         //candyEffect(candyObj);
+
+        // Disable Drag and Drop Functionality for every Candy
+
         candyEffect(uniqueObj[ index ]);
       });
 
       timeInterval = 300;
       time = setInterval(function(){
+
+        // Disable Option Drag
+        //disableDrag();
+
+
+        // Remove Each Match Candy after timeInterval
         $.each( uniqueObj, function( index, value ) {
           $(uniqueObj[ index ]).remove();
           $(".score > span").text(points);
           clearInterval(time);
         });
+
+        // Fill with new candies
+        fillNewCandies(timeInterval);
+
+        // Look if after deletion there is another Match on Global Variable repFlag = 1
+        for (j = 1; j <= 7; j++) {
+            //console.log("Column: " + j);
+            for (i = 1; i <= 7; i++) {
+              $( ".col-" + j + " img:nth-child(" + i + ")" )
+              //console.log( ".col-" + j + " img:nth-child(" + i + ")" )
+              pointsAlg(".col-" + j + " img:nth-child(" + i + ")")
+            }
+          }
+
+        // Clear Arrays after deletion
+        valueMatchArray = [];
+        uniqueObj = [];
+        //console.log(repFlag);
+
+        if (repFlag != 0){
+          console.log(repFlag);
+          //valueMatchArray = [];
+          //uniqueObj = [];
+          //repFlag = 0;
+          //deleteMatchCandies ();
+          //clearInterval(time);
+          //selectCandy();
+
+        }
+
       }, timeInterval*6);
 
 
+  }
 
+  // Function to add missing candies
+  function fillNewCandies (timeInterval){
+    for (j = 1; j <= 7; j++) {
+      var count = $(".col-" + j + " img").length;
+      //console.log("Missing Objects: " + (7 - count));
+
+      // Find missing objects by column class
+      if ( count < 7 ){
+        machingDeletedCounter += 1;
+        //console.log( "ClassColumn: " + ".col-" + j );
+        //console.log( "How many Columns have Image Deleted: " + machingDeletedCounter )
+        //console.log( "Missing Objects: " + (7 - count) );
+
+
+        for (i = 1; i <= (7 - count); i++) {
+          randomCandy = Math.floor((Math.random() * 4) + 1);
+          candy = randomCandy + ".png";
+          //console.log(candy);
+          $(".col-" + j ).prepend('<img id="'+ j + i + '" src="image/' + candy + '" height="90px" />')
+        }
+      }
+    }
+
+    // Initialize counter for next matching
+    machingDeletedCounter = 0;
+
+    //console.log(timeInterval);
+
+    setInterval(function(){
+      selectCandy();
+    },(timeInterval*6 + 100));
 
   }
+
+  function disableDrag(){
+    // Read the Candy Matrix
+
+    // J represent column and i represents row
+    for (j = 1; j <= 7; j++) {
+        //console.log("Column: " + j);
+        for (i = 1; i <= 7; i++) {
+          $( ".col-" + j + " img:nth-child(" + i + ")").draggable('disable');
+          $( ".col-" + j + " img:nth-child(" + i + ")").draggable('disable');
+        }
+      }
+  }
+
+  function enableDrag(){
+    // Read the Candy Matrix
+
+    // J represent column and i represents row
+    for (j = 1; j <= 7; j++) {
+        //console.log("Column: " + j);
+        for (i = 1; i <= 7; i++) {
+          $( ".col-" + j + " img:nth-child(" + i + ")").draggable('enable');
+          $( ".col-" + j + " img:nth-child(" + i + ")").draggable('enable');
+        }
+      }
+  }
+
+
+
+
 
 });
