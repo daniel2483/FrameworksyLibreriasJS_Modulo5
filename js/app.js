@@ -628,19 +628,32 @@ $(document).ready(function(){
             }
           }
 
-        // Clear Arrays after deletion
-        valueMatchArray = [];
-        uniqueObj = [];
+        console.log(uniqueObj);
+        if (uniqueObj.length == 0 ){
+          valueMatchArray = [];
+          uniqueObj = [];
+          runSelectCandyTime(50);
+          clearInterval(time);
+        }
+
+
         //console.log(repFlag);
 
-        if (repFlag != 0){
-          console.log(repFlag);
-          //valueMatchArray = [];
-          //uniqueObj = [];
+        if (uniqueObj.length > 0 ){
+          //console.log(repFlag);
+
+          // Clear Arrays after deletion
+          valueMatchArray = [];
+          uniqueObj = [];
           repFlag = 0;
           clearInterval(time);
           disableDrag();
+
+
           deleteMatchCandies();
+
+
+          //deleteMatchCandies();
           enableDrag();
 
           //timeInterval = 300;
@@ -648,14 +661,18 @@ $(document).ready(function(){
           //selectCandy();
 
         }
-        else{
+        //else{
           // Delete Interval Time
-          clearInterval(time);
-          enableDrag();
+          // Clear Arrays after deletion
+          //valueMatchArray = [];
+          //uniqueObj = [];
+
+          //clearInterval(time);
+          //enableDrag();
 
           // Rerun Candy Selection
-          runSelectCandyTime(100);
-        }
+          //runSelectCandyTime(100);
+        //}
 
         //checkIfMatchStill();
 
@@ -682,7 +699,7 @@ $(document).ready(function(){
           randomCandy = Math.floor((Math.random() * 4) + 1);
           candy = randomCandy + ".png";
 
-          randomId = Math.floor((Math.random() * 10000000) + 1);
+          randomId = Math.floor((Math.random() * 100000000) + 1);
           //console.log(candy);
           $(".col-" + j ).prepend('<img id="'+ randomId + '" src="image/' + candy + '" height="90px" />');
           $("#" + randomId).animate({"top" : "-=100px"},0,"linear");
@@ -697,7 +714,7 @@ $(document).ready(function(){
 
     //console.log(timeInterval);
 
-    runSelectCandyTime(timeInterval);
+    runSelectCandyTime(100);
   }
 
   function runSelectCandyTime(timeInterval){
